@@ -8,26 +8,54 @@ import os
 os.chdir(os.path.dirname(__file__))
 TEST_FILE = "test.txt"
 DATA_FILE = "data.txt"
-filename = TEST_FILE 
+filename = DATA_FILE 
 with open(filename) as f:
     data = f.read().splitlines()
 
 split_lines = [line.split(' ') for line in data]
 
-for line in split_line:
-    max = 0
-    for i, item in enumerate(line):
-        if i == len(len):
+LIMIT = 3
+count = 0
+
+def check_line(line): 
+
+    asscending = None
+
+    for i, item in enumerate(line[1:]):
+        current = int(item)
+        previous = int(line[i])
+
+        c_gt = (current >= previous)
+        if current == previous:
+            return False, i         
+
+        if abs(current - previous) > LIMIT:
+            return False, i 
+        if asscending is None:
+            asscending = c_gt 
+            continue
+
+        if asscending != c_gt:
+            return False, i
+
+    return True, None
+
+for line in split_lines:
+    print(count)
+    result, idx = check_line(line)
+    print(result, line)
+    if result:
+        count += 1
+        continue
+
+    for i in range(2):
+        _line = line.copy()
+        del _line[idx + i]
+        result, _ = check_line(_line)
+        print(result, _line)
+        if result:
+            count += 1
             break
-        current_ = int(item)
-        next_ = int(line[i])
 
-        diff = abs(current_ - next_)
-        if diff > max:
-            max = diff
-
-
-    if max <= 3:
-        valid = True
-
-
+print([len(l) for l in split_lines])
+print(count)
